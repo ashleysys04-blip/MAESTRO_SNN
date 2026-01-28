@@ -1,0 +1,10 @@
+# core
+numpy<2
+pandas
+
+# MIDI processing
+pretty_midi
+mido
+
+# modeling
+torch
