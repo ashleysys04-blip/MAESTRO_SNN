@@ -1,0 +1,17 @@
+# data
+data/maestro/midi/
+data/maestro/audio/
+
+# python
+__pycache__/
+*.pyc
+
+# experiments
+logs/
+checkpoints/
+
+# notebooks
+.ipynb_checkpoints/
+
+# macOS
+.DS_Store
