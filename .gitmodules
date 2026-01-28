@@ -1,0 +1,3 @@
+[submodule "external/DH-SNN"]
+	path = external/DH-SNN
+	url = https://github.com/eva1801/DH-SNN
