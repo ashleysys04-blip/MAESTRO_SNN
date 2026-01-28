@@ -1,6 +1,13 @@
 """
 Build performance-disjoint train/val/test splits for MAESTRO.
 
+
+실행
+
+python -m scripts.build_splits
+
+
+
 Key design:
 - Musical pieces are fixed across splits
 - Performances (recordings) are disjoint between splits

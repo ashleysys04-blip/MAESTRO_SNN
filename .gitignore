@@ -15,3 +15,6 @@ checkpoints/
 
 # macOS
 .DS_Store
+
+# large data files
+data/maestro/maestro-v3.0.0-midi.zip
