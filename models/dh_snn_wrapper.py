@@ -1,5 +1,7 @@
 # models/dh_snn_wrapper.py
 
+
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -10,7 +12,49 @@ import torch
 import torch.nn as nn
 
 
-def add_dhsnn_to_path(repo_root: Optional[Path] = None) -> Path:
+def resolve_snn_layers_root(
+    dhsnn_path: Path,
+    prefer_subdir: Optional[str] = None,
+) -> Optional[Path]:
+    """
+    Find a directory that contains the SNN_layers package and return its parent.
+    """
+    candidates: List[Path] = []
+
+    if prefer_subdir:
+        preferred = dhsnn_path / prefer_subdir
+        if (preferred / "SNN_layers").is_dir():
+            candidates.append(preferred)
+
+    if not candidates:
+        priority = [
+            "TIMIT",
+            "SHD",
+            "SSC",
+            "GSC",
+            "s-mnist",
+            "NeuroVPR",
+            "deap",
+            "delayed_xor",
+            "multitimescale_xor",
+        ]
+        for name in priority:
+            p = dhsnn_path / name
+            if (p / "SNN_layers").is_dir():
+                candidates.append(p)
+
+    if not candidates:
+        for p in dhsnn_path.rglob("SNN_layers"):
+            if p.is_dir():
+                candidates.append(p.parent)
+
+    return candidates[0] if candidates else None
+
+
+def add_dhsnn_to_path(
+    repo_root: Optional[Path] = None,
+    prefer_subdir: Optional[str] = None,
+) -> Path:
     """
     Ensure external/DH-SNN is importable.
     Returns the resolved DH-SNN path.
@@ -27,9 +71,14 @@ def add_dhsnn_to_path(repo_root: Optional[Path] = None) -> Path:
             f"Expected: external/DH-SNN (git submodule or clone)."
         )
 
-    # Put DH-SNN at front so `import SNN_layers...` works
+    # Put DH-SNN at front so project-level imports resolve
     if str(dhsnn_path) not in sys.path:
         sys.path.insert(0, str(dhsnn_path))
+
+    # Add the parent of SNN_layers so `import SNN_layers` works.
+    snn_root = resolve_snn_layers_root(dhsnn_path, prefer_subdir=prefer_subdir)
+    if snn_root is not None and str(snn_root) not in sys.path:
+        sys.path.insert(0, str(snn_root))
 
     return dhsnn_path
 
