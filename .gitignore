@@ -18,3 +18,4 @@ checkpoints/
 
 # large data files
 data/maestro/maestro-v3.0.0-midi.zip
+external/DH-SNN/AUDIO/data/
